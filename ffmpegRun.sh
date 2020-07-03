@@ -29,7 +29,7 @@ if [ $INPUT_VERB == "help" ]; then
   echo "help        - prints this help message";
   echo ""
 elif [ $INPUT_VERB == "start" ]; then
-  ./ffmpegNormalize.sh &> "$(echo "$(date).log")";
+  ./ffmpegNormalize.sh &> "$(echo "$(date +'%s').log")";
 elif [ $INPUT_VERB == "showfails" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
     cat "$LATEST_DEBUG_LOG_LOCATION" | grep "preserving original, deleting corrupt file" | sort -u;

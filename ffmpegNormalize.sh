@@ -15,7 +15,7 @@ SCRIPT_PATH="$(dirname "$(realpath -s "$0")")"
 FFMPEG_SUPPORTED_EXTS=$(ffmpeg -demuxers -hide_banner | tail -n +5 | cut -d' ' -f4 | xargs -I {} ffmpeg -hide_banner -h demuxer={} | grep 'Common extensions' | cut -d' ' -f7 | tr ',' $'\n' | tr -d '.' | sort -u | tr '\n' ' ' | sed "s/ /|/g" | rev | cut -c2- | rev | echo ".*\.($(</dev/stdin))")
 
 function fancier_echo {
-  echo "-------------" && echo "[[$(date +'%r')]] $1" && echo "-------------"
+  echo "-------------" && echo "[[$(date +'%s')]] $1" && echo "-------------"
 }
 
 function print_command_before_exec {
