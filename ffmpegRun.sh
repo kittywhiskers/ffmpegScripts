@@ -32,42 +32,42 @@ elif [ $INPUT_VERB == "start" ]; then
   ./ffmpegNormalize.sh &> "$(echo "$(date).log")";
 elif [ $INPUT_VERB == "showfails" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "preserving original, deleting corrupt file";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "preserving original, deleting corrupt file" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
   fi
 elif [ $INPUT_VERB == "showconvs" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "passes ffprobe, deleting original";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "passes ffprobe, deleting original" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
   fi
 elif [ $INPUT_VERB == "showskips" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "probably already processed, skipping";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "probably already processed, skipping" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
   fi
 elif [ $INPUT_VERB == "showyellows" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "already processed and not corrupt, skipping, not deleting original";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "already processed and not corrupt, skipping, not deleting original" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
   fi
 elif [ $INPUT_VERB == "showipts" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "Running ffmpeg with input";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "Running ffmpeg with input" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
   fi
 elif [ $INPUT_VERB == "printregex" ]; then
   if test -f "$LATEST_DEBUG_LOG_LOCATION"; then
-    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "Regex used by find is";
+    cat "$LATEST_DEBUG_LOG_LOCATION" | grep "Regex used by find is" | sort -u;
   else
     echo "Cannot find any debug log, exiting." >&2;
     exit 1;
