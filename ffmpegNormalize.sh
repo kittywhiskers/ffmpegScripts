@@ -29,30 +29,27 @@ function process_file {
     if [ -z ${1+x} ]; then
         echo "no files found, exiting";
     else
-        if [ "${1: -14}" == "_x265.mp4" ]; then
-          fancier_echo "$1 has _x265.mp4 suffix, probably already processed, skipping";
+        if [ "${1: -9}" == "_x265.mp4" ]; then
+          fancier_echo "$1 has _x265.mp4 suffix, probably already processed, testing with ffprobe";
+          if /usr/local/bin/ffprobe "$1"; then
+            fancier_echo "\"$1\"_x265.mp4 already processed and not corrupt, skipping, not deleting original";
+          else
+            fancier_echo "\"$1\"_x265.mp4 already processed but corrupt, skipping, not deleting original";
+          fi
           return;
         else
-          # Check if file was already processed
-          if test -f "${1%.*}_x265.mp4"; then
-            if /usr/local/bin/ffprobe "${1%.*}_x265.mp4"; then
-              fancier_echo "${1%.*}_x265.mp4 already processed and not corrupt, skipping, not deleting original";
-              return;
-            fi
+          bash -c "fancier_echo \"Running ffmpeg with input $1 and output file ${1%.*}_x265.mp4\"";
+          /usr/local/bin/ffmpeg -y -i "$1" -c:v libx265 -preset slow -vf scale=-2:720 -x265-params crf=18 \
+           -c:a aac -b:a 128k \
+          "${1%.*}_x265.mp4";
+          sleep 2 && sync;
+          # Now check if output passses integrity checks
+          if /usr/local/bin/ffprobe "${1%.*}_x265.mp4"; then
+            fancier_echo "${1%.*}_x265.mp4 passes ffprobe, deleting original";
+            rm "$1";
           else
-            bash -c "fancier_echo \"Running ffmpeg with input $1 and output file ${1%.*}_x265.mp4\"";
-            /usr/local/bin/ffmpeg -y -i "$1" -c:v libx265 -preset slow -vf scale=-2:720 -x265-params crf=18 \
-             -c:a aac -b:a 128k \
-            "${1%.*}_x265.mp4";
-            sleep 2 && sync;
-            # Now check if output passses integrity checks
-            if /usr/local/bin/ffprobe "${1%.*}_x265.mp4"; then
-              fancier_echo "${1%.*}_x265.mp4 passes ffprobe, deleting original";
-              rm "$1";
-            else
-              fancier_echo "${1%.*}_x265.mp4 is corrupt, preserving original, deleting corrupt file";
-              rm "${1%.*}_x265.mp4";
-            fi
+            fancier_echo "${1%.*}_x265.mp4 is corrupt, preserving original, deleting corrupt file";
+            rm "${1%.*}_x265.mp4";
           fi
         fi
       fi
