@@ -2,13 +2,14 @@
 
 # ffmpegScripts
 
-A bunch of `bash` scripts that help you take a folder with a variety of formats and convert them to a **singular, consistent format.** Useful for when you handle diverse media sources.
+A bunch of `bash` scripts that (primarily) help you take a folder with a variety of formats and convert them to a **singular, consistent format.** Useful for when you handle diverse media sources.
 
 ## Included "in the package"
 
 - `ffmpegNormalize.sh`: The primary script that does the job!
-- `ffmpegSetupMacOS.sh`: Setup script that replaces homebrew's provided `ffmpeg` with a version of ffmpeg with all options enabled (thanks to `homebrew-ffmpeg`) along with all other dependencies
-- `ffmpegRun.sh`: For all your debug log needs
+- `ffmpegSetupMacOS.sh`: Setup script that replaces homebrew's provided `ffmpeg` with a version of ffmpeg with all options enabled (thanks to `homebrew-ffmpeg`) along with all other dependencies, useful for also when you break your `ffmpeg` because of a bad case of `brew upgrade`
+- `ffmpegRun.sh`: For all your debugging needs
+- `ffmpegDecompose.sh`: For when `crf=50` isn't high enough (uses `libx265`)
 
 ## Dependencies
 
@@ -17,14 +18,15 @@ A bunch of `bash` scripts that help you take a folder with a variety of formats 
 
 ## Script Defaults
 
-- Input file can be anything, conversion will result in output with 720px width, `crf` value 18 (increase it to make file size smaller but worsen quality) in an MP4 container with x265 video encoding handled by `libx265` running with `slow` preset and 128k AAC audio.
+- Input file can be anything, conversion will result in output with 720px width, `crf` value 18 (increase it to make file size smaller but worsen quality) in an MP4 container with HEVC video encoding handled by `libx265` running with `slow` preset and 128k AAC audio.
 
 ### Why `slow` instead of `veryslow`
 
-**Diminishing Returns**
+**Because of Diminishing Returns**
 
 ![Diminishing Returns](https://raw.githubusercontent.com/kittywhiskers/ffmpegScripts/master/misc/coolgraph.png)
 
 ## License
 
 Released under [The Unlicense](https://github.com/kittywhiskers/ffmpegScripts/blob/master/LICENSE)
+
