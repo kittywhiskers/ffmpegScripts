@@ -36,7 +36,7 @@ fi
 
 # TODO: Add feature that allows choice between different codecs
 function runffmpeg {
-  /usr/local/bin/ffmpeg -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
+  "/usr/local/bin/ffmpeg" -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
 }
 
 # Create our working directory and copy our original
