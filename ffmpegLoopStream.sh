@@ -33,7 +33,7 @@ if [ -z ${SOURCE_FILE+x} ]; then
 elif [ -z ${DEST_FRAMERATE+x} ]; then
   print_and_quit "Framerate missing in arguments, quitting!" >&2;
 elif [ -z ${DEST_QUALITY+x} ]; then
-  print_and_quit "Resolution missing in arguments, quitting! (accepted values 360, 480, 720, 1080, 1440, 2160)" >&2;
+  print_and_quit "Resolution missing in arguments, quitting!" >&2;
 elif [ ! -f $SOURCE_FILE ]; then
   print_and_quit "Cannot locate $SOURCE_FILE or is not a valid file, quitting!" >&2;
 elif ! [[ $DEST_FRAMERATE =~ ^[0-9]+$ ]]; then
@@ -67,4 +67,5 @@ determine_quality
 # https://goughlui.com/2016/08/27/video-compression-testing-x264-vs-x265-crf-in-handbrake-0-10-5/
 # we also don't care about bitrate
 fancier_echo "ffmpeg will be allocated $(expr $USABLE_THREADS / 2) threads"
+fancier_echo "x264-level determined to be $X264_LEVEL (quality $DEST_QUALITY@$DEST_FRAMERATE fps)"
 print_command_before_exec "\"/usr/local/bin/ffmpeg\" -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset slow -vf scale=-2:$DEST_QUALITY -crf 12 -level:$X264_LEVEL -c:a aac -b:a 128k -threads $(expr $USABLE_THREADS / 2) -bufsize 512k -f mpegts \"$RTMP_SERVER/$RTMP_KEY\""

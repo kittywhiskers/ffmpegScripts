@@ -20,7 +20,7 @@ A bunch of `bash` scripts that (primarily) help you take a folder with a variety
 ## Script Defaults
 
 - `ffmpegNormalize.sh`: Input file can be anything, conversion will result in output with 720px width, constant rate factor of 18 (increase it to make file size smaller but worsen quality) in an MP4 container with HEVC video encoding handled by `libx265` running with `slow` preset and 128k AAC audio.
-- `ffmpegLoopStream.sh`: Input file can be anything, output stream will be to YouTube's RTMP servers (you need a key), with a constant rate factor of 12, it will use half the threads on your machine with a `512k` buffer, encoding with `libx264` (`slow` preset) and 128k AAC audio, output stream format is `mpegts`.
+- `ffmpegLoopStream.sh`: Input file can be anything, output stream will be to YouTube's RTMP servers (you'll need a key), with a constant rate factor of 12, it will use half the threads on your machine with a `512k` buffer, encoding with `libx264` (`slow` preset) and 128k AAC audio, output stream format is `mpegts`.
 
 ### Why `slow` instead of `veryslow`
 

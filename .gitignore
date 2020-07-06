@@ -1,0 +1,14 @@
+# Exclude stuff that Finder makes
+.DS_Store
+
+# Exclude files that I use for testing
+*.mkv
+*.webm
+*.mp4
+*.mov
+*.aac
+*.aiff
+*.mp3
+
+# Exclude UUIDs that start with numbers
+[0-9]*
