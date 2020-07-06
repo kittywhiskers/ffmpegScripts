@@ -26,7 +26,7 @@ elif [ -z ${DECOMPOSITION_CRF_TIMES+x} ]; then
   print_and_quit "Decomposition extent missing in arguments, quitting!" >&2;
 elif [ -z ${DECOMPOSITION_CRF_VALUE+x} ]; then
   print_and_quit "Constant Rate Factor missing in arguments, quitting!" >&2;
-elif [ ! -f $SOURCE_FILE ]; then
+elif [ ! -f "$SOURCE_FILE" ]; then
   print_and_quit "Cannot locate $SOURCE_FILE or is not a valid file, quitting!" >&2;
 elif ! [[ $DECOMPOSITION_CRF_TIMES =~ ^[0-9]+$ ]]; then
   print_and_quit "Decomposition extent is not a valid number, quitting!"  >&2;
@@ -40,7 +40,7 @@ function runffmpeg {
 }
 
 # Create our working directory and copy our original
-mkdir $RANDOM_UUID && cp $SOURCE_FILE $RANDOM_UUID
+mkdir $RANDOM_UUID && cp "$SOURCE_FILE" "$RANDOM_UUID"
 
 # Run decomposition function a "zeroth" time before running in within the loop
 runffmpeg $RANDOM_UUID/"$(echo $SOURCE_FILE | sed 's@.*/@@')" $RANDOM_UUID/"$DECOMPOSITION_COUNTER.mp4"
