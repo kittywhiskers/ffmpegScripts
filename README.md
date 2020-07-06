@@ -11,6 +11,7 @@ A bunch of `bash` scripts that (primarily) help you take a folder with a variety
 - `ffmpegRun.sh`: For all your debugging needs
 - `ffmpegDecompose.sh`: For when `crf=50` isn't high enough (choose between `x265` and `x264`) **[experimental]**
 - `ffmpegLoopStream.sh`: High quality looped video streaming for YouTube **[experimental]**
+- `ffprobeDeleteCorrupts.sh`: Delete files that fail `ffprobe` corruption checks **[risky, untested]**
 
 ## Dependencies
 
