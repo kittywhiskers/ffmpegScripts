@@ -9,6 +9,7 @@ DECOMPOSITION_COUNTER=0
 SOURCE_FILE=$1
 DECOMPOSITION_CRF_TIMES=$2
 DECOMPOSITION_CRF_VALUE=$3
+DECOMPOSITION_CODEC_CHOICE=$4
 
 if ! [ -x "$(command -v /usr/local/bin/ffmpeg)" ] || ! [ -x "$(command -v /usr/local/bin/ffprobe)" ]; then
   echo 'ffmpeg cannot be found in /usr/local/bin/, quitting :(' >&2
@@ -16,7 +17,7 @@ if ! [ -x "$(command -v /usr/local/bin/ffmpeg)" ] || ! [ -x "$(command -v /usr/l
 fi
 
 function print_and_quit {
-  echo $1; echo "ffmpegDecompose.sh [filepath] [extent] [crf]"; exit 1;
+  echo $1; echo "ffmpegDecompose.sh [filepath] [extent] [crf] [codec]"; exit 1;
 }
 
 # Some rudimentary checks before we begin
@@ -32,11 +33,17 @@ elif ! [[ $DECOMPOSITION_CRF_TIMES =~ ^[0-9]+$ ]]; then
   print_and_quit "Decomposition extent is not a valid number, quitting!"  >&2;
 elif ! [[ $DECOMPOSITION_CRF_VALUE =~ ^[0-9]+$ ]]; then
   print_and_quit "Constant Rate Factor is not a valid number, quitting!"  >&2;
+elif ! [[ -z ${DECOMPOSITION_CODEC_CHOICE+z} ]]; then
+  DECOMPOSITION_CODEC_CHOICE="libx265"
+  print "No codec selected, defaulting to $DECOMPOSITION_CODEC_CHOICE"
 fi
 
-# TODO: Add feature that allows choice between different codecs
 function runffmpeg {
-  "/usr/local/bin/ffmpeg" -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
+  if [[ $DECOMPOSITION_CODEC_CHOICE == "libx265" ]]; then
+    "/usr/local/bin/ffmpeg" -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
+  else
+    "/usr/local/bin/ffmpeg" -y -i "$1" -c:v $DECOMPOSITION_CODEC_CHOICE -preset slow -crf="$DECOMPOSITION_CRF_VALUE" -c:a aac "$2"; sync;
+  fi
 }
 
 # Create our working directory and copy our original
@@ -50,4 +57,5 @@ while [ $DECOMPOSITION_COUNTER != "$((($DECOMPOSITION_CRF_TIMES - 1)))" ]; do
   DECOMPOSITION_COUNTER=$((($DECOMPOSITION_COUNTER+1)))
 done;
 
+# -vf smartblur'red version is nice datamoshing material
 mv $RANDOM_UUID/"$DECOMPOSITION_COUNTER.mp4" "$RANDOM_UUID.mp4"
