@@ -32,9 +32,9 @@ function process_file {
         if [ "${1: -9}" == "_x265.mp4" ]; then
           fancier_echo "$1 has _x265.mp4 suffix, probably already processed, testing with ffprobe";
           if /usr/local/bin/ffprobe "$1"; then
-            fancier_echo "\"$1\"_x265.mp4 already processed and not corrupt, skipping, not deleting original";
+            fancier_echo "\"$1\" already processed and not corrupt, skipping, not deleting original";
           else
-            fancier_echo "\"$1\"_x265.mp4 already processed but corrupt, skipping, not deleting original";
+            fancier_echo "\"$1\" already processed but corrupt, skipping, not deleting original";
           fi
           return;
         else
