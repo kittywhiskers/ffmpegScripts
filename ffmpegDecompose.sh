@@ -35,7 +35,7 @@ elif ! [[ $DECOMPOSITION_CRF_VALUE =~ ^[0-9]+$ ]]; then
   print_and_quit "Constant Rate Factor is not a valid number, quitting!"  >&2;
 elif ! [[ -z ${DECOMPOSITION_CODEC_CHOICE+z} ]]; then
   DECOMPOSITION_CODEC_CHOICE="libx265"
-  print "No codec selected, defaulting to $DECOMPOSITION_CODEC_CHOICE"
+  echo "No codec selected, defaulting to $DECOMPOSITION_CODEC_CHOICE"
 fi
 
 function runffmpeg {
