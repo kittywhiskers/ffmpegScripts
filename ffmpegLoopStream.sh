@@ -5,7 +5,7 @@ DEST_FRAMERATE=$2
 DEST_QUALITY=$3
 RTMP_KEY=$4
 RTMP_SERVER="rtmp://a.rtmp.youtube.com/live2"
-USABLE_THREADS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || getconf NPROCESSORS_ONLN 2>/dev/null || echo 2)"
+#USABLE_THREADS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || getconf NPROCESSORS_ONLN 2>/dev/null || echo 2)"
 
 X264_LEVEL=""
 
@@ -66,6 +66,6 @@ determine_quality
 # We want to give the impression that it is lossless, so we use a crf of 12
 # https://goughlui.com/2016/08/27/video-compression-testing-x264-vs-x265-crf-in-handbrake-0-10-5/
 # we also don't care about bitrate
-fancier_echo "ffmpeg will be allocated $(expr $USABLE_THREADS / 2) threads"
+#fancier_echo "ffmpeg will be allocated $(expr $USABLE_THREADS / 2) threads"
 fancier_echo "x264-level determined to be $X264_LEVEL (quality $DEST_QUALITY@$DEST_FRAMERATE fps)"
-print_command_before_exec "\"ffmpeg\" -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset slow -vf scale=-2:$DEST_QUALITY -crf 12 -c:a aac -b:a 128k -threads $(expr $USABLE_THREADS / 2) -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 512k -f flv \"$RTMP_SERVER/$RTMP_KEY\""
+print_command_before_exec "\"ffmpeg\" -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset slow -vf scale=-2:$DEST_QUALITY -crf 12 -c:a aac -b:a 128k -threads 2 -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 128k -f flv \"$RTMP_SERVER/$RTMP_KEY\""
