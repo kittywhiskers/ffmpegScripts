@@ -5,6 +5,7 @@ DEST_FRAMERATE=$2
 DEST_QUALITY=$3
 RTMP_KEY=$4
 X264_PRESET=$5
+X264_CRF=$6
 RTMP_SERVER="rtmp://a.rtmp.youtube.com/live2"
 #USABLE_THREADS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || getconf NPROCESSORS_ONLN 2>/dev/null || echo 2)"
 
@@ -39,12 +40,19 @@ elif [ -z ${DEST_QUALITY+x} ]; then
 elif [ -z ${X264_PRESET+x} ]; then
   X264_PRESET="slow";
   print "Defaulting to $X264_PRESET x264-preset";
+elif [ -z ${X264_CRF+x} ]; then
+  X264_CRF="24";
+  print "Defaulting to a constant-rate factor of $X264_CRF";
 elif [ ! -f "$SOURCE_FILE" ]; then
   print_and_quit "Cannot locate $SOURCE_FILE or is not a valid file, quitting!" >&2;
 elif ! [[ $DEST_FRAMERATE =~ ^[0-9]+$ ]]; then
   print_and_quit "Framerate is not a valid number, quitting!"  >&2;
 elif ! [[ $DEST_QUALITY =~ ^[0-9]+$ ]]; then
   print_and_quit "Resolution is not a valid number, quitting!"  >&2;
+fi
+
+if ! [[ $X264_CRF =~ ^[0-9]+$ ]]; then
+  print_and_quit "Constant-rate factor is not a valid number, quitting!"  >&2;
 fi
 
 # https://support.google.com/youtube/answer/2853702?hl=en
@@ -94,8 +102,8 @@ function determine_bitrate {
 determine_quality
 determine_bitrate
 
-# We want to give the impression that it is lossless, so we use a crf of 12
+# We want to give the impression that it is lossless, so we use a crf of 12 (nope, free instances can't handle that, let's be modest, 24)
 # https://goughlui.com/2016/08/27/video-compression-testing-x264-vs-x265-crf-in-handbrake-0-10-5/
 #fancier_echo "ffmpeg will be allocated $(expr $USABLE_THREADS / 2) threads"
 fancier_echo "x264-level determined to be $X264_LEVEL, x264-bitrate set to $CONSTANT_BITRATE (quality $DEST_QUALITY@$DEST_FRAMERATE fps)"
-print_command_before_exec "\"ffmpeg\" -rtbufsize 300M -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset $X264_PRESET -vf scale=-2:$DEST_QUALITY -crf 12 -c:a aac -b:a 128k -threads 2 -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 512k -minrate $CONSTANT_BITRATE -maxrate $CONSTANT_BITRATE -f flv \"$RTMP_SERVER/$RTMP_KEY\""
+print_command_before_exec "\"ffmpeg\" -rtbufsize 300M -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset $X264_PRESET -vf scale=-2:$DEST_QUALITY -crf $X264_CRF -c:a aac -b:a 128k -threads 2 -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 512k -minrate $CONSTANT_BITRATE -maxrate $CONSTANT_BITRATE -f flv \"$RTMP_SERVER/$RTMP_KEY\""
