@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # basically a stripped down version ffmpegNormalize.sh
 
-if ! [ -x "$(command -v /usr/local/bin/ffmpeg)" ] || ! [ -x "$(command -v /usr/local/bin/ffprobe)" ]; then
+if ! [ -x "$(command -v ffmpeg)" ] || ! [ -x "$(command -v ffprobe)" ]; then
   echo 'Required applications are absent, quitting :(' >&2
   exit 1
 fi
@@ -24,7 +24,7 @@ function print_command_before_exec {
 export -f fancier_echo
 
 function process_file {
-  if /usr/local/bin/ffprobe "$1"; then
+  if ffprobe "$1"; then
     fancier_echo "\"$1\" not corrupt, skipping, left intact";
   else
     fancier_echo "\"$1\" corrupt, deleting";

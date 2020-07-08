@@ -3,7 +3,7 @@
 # https://unix.stackexchange.com/a/269367
 trap 'trap - SIGINT; kill -SIGINT $$' SIGINT;
 
-if ! [ -x "$(command -v /usr/local/bin/ffmpeg)" ] || ! [ -x "$(command -v /usr/local/bin/ffprobe)" ]; then
+if ! [ -x "$(command -v ffmpeg)" ] || ! [ -x "$(command -v ffprobe)" ]; then
   echo 'Required applications are absent, quitting :(' >&2
   exit 1
 fi
@@ -31,7 +31,7 @@ function process_file {
     else
         if [ "${1: -9}" == "_x265.mp4" ]; then
           fancier_echo "$1 has _x265.mp4 suffix, probably already processed, testing with ffprobe";
-          if /usr/local/bin/ffprobe "$1"; then
+          if ffprobe "$1"; then
             fancier_echo "\"$1\" already processed and not corrupt, skipping, not deleting original";
           else
             fancier_echo "\"$1\" already processed but corrupt, skipping, not deleting original";
@@ -39,12 +39,12 @@ function process_file {
           return;
         else
           bash -c "fancier_echo \"Running ffmpeg with input $1 and output file ${1%.*}_x265.mp4\"";
-          /usr/local/bin/ffmpeg -y -i "$1" -c:v libx265 -preset slow -vf scale=-2:720 -x265-params crf=18 \
+          ffmpeg -y -i "$1" -c:v libx265 -preset slow -vf scale=-2:720 -x265-params crf=18 \
            -c:a aac -b:a 128k \
           "${1%.*}_x265.mp4";
           sleep 2 && sync;
           # Now check if output passses integrity checks
-          if /usr/local/bin/ffprobe "${1%.*}_x265.mp4"; then
+          if ffprobe "${1%.*}_x265.mp4"; then
             fancier_echo "${1%.*}_x265.mp4 passes ffprobe, deleting original";
             rm "$1";
           else

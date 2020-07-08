@@ -68,4 +68,4 @@ determine_quality
 # we also don't care about bitrate
 fancier_echo "ffmpeg will be allocated $(expr $USABLE_THREADS / 2) threads"
 fancier_echo "x264-level determined to be $X264_LEVEL (quality $DEST_QUALITY@$DEST_FRAMERATE fps)"
-print_command_before_exec "\"/usr/local/bin/ffmpeg\" -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset slow -vf scale=-2:$DEST_QUALITY -crf 12 -c:a aac -b:a 128k -threads $(expr $USABLE_THREADS / 2) -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 512k -f flv \"$RTMP_SERVER/$RTMP_KEY\""
+print_command_before_exec "\"ffmpeg\" -stream_loop -1 -i \"$SOURCE_FILE\" -r $DEST_FRAMERATE -g $(($DEST_FRAMERATE * 2)) -deinterlace -c:v libx264 -preset slow -vf scale=-2:$DEST_QUALITY -crf 12 -c:a aac -b:a 128k -threads $(expr $USABLE_THREADS / 2) -bsf:v h264_metadata=level=$X264_LEVEL -bufsize 512k -f flv \"$RTMP_SERVER/$RTMP_KEY\""

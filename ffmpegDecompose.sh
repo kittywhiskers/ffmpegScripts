@@ -11,8 +11,8 @@ DECOMPOSITION_CRF_TIMES=$2
 DECOMPOSITION_CRF_VALUE=$3
 DECOMPOSITION_CODEC_CHOICE=$4
 
-if ! [ -x "$(command -v /usr/local/bin/ffmpeg)" ] || ! [ -x "$(command -v /usr/local/bin/ffprobe)" ]; then
-  echo 'ffmpeg cannot be found in /usr/local/bin/, quitting :(' >&2
+if ! [ -x "$(command -v ffmpeg)" ] || ! [ -x "$(command -v ffprobe)" ]; then
+  echo 'ffmpeg cannot be found in , quitting :(' >&2
   exit 1
 fi
 
@@ -40,9 +40,9 @@ fi
 
 function runffmpeg {
   if [[ $DECOMPOSITION_CODEC_CHOICE == "libx265" ]]; then
-    "/usr/local/bin/ffmpeg" -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
+    "ffmpeg" -y -i "$1" -c:v libx265 -preset slow -c:a aac -x265-params crf="$DECOMPOSITION_CRF_VALUE" "$2"; sync;
   else
-    "/usr/local/bin/ffmpeg" -y -i "$1" -c:v $DECOMPOSITION_CODEC_CHOICE -preset slow -crf="$DECOMPOSITION_CRF_VALUE" -c:a aac "$2"; sync;
+    "ffmpeg" -y -i "$1" -c:v $DECOMPOSITION_CODEC_CHOICE -preset slow -crf="$DECOMPOSITION_CRF_VALUE" -c:a aac "$2"; sync;
   fi
 }
 
