@@ -16,7 +16,11 @@ A bunch of `bash` scripts that (primarily) help you take a folder with a variety
 ## Dependencies
 
 - `homebrew` package manager (install it from [here](https://brew.sh))
-- an internet connection _(only for `ffmpegSetupMacOS.sh`)_
+- an internet connection _(only for `ffmpegSetupMacOS.sh` and `ffmpegLoopStream.sh`)_
+
+## Example use of `ffmpegScripts`
+
+* [Using `ffmpegLoopStream.sh` in a Heroku Dyno instance to stream looped video to YouTube Live](https://github.com/kittywhiskers/ffmpegDeploy)
 
 ## Script Defaults
 
